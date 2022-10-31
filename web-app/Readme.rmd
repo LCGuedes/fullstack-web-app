@@ -1,0 +1,6 @@
+## SignUp page
+
+    # Features
+
+    - Regex field validation;
+    - Accessbility;
