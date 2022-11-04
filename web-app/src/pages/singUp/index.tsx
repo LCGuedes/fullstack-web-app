@@ -6,7 +6,7 @@ import * as _ from "./styles";
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9- ]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
-export default function SignUp() {
+export default function SignUp({onSubmit}: any) {
 
     const userRef = useRef<any>();
 
@@ -145,8 +145,8 @@ export default function SignUp() {
                         </p>
 
                         <span>
-                            <input type="checkbox"/>
-                            <a>esqueceu sua senha?</a>
+                            <input type="checkbox" placeholder="forget password"/>
+                            <a>esqueceu senha?</a>
                         </span>
                         
                         <button disabled={!validName || !validPwd || !validMatch ? true: false}>Cadastrar</button>
