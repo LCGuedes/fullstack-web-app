@@ -1,0 +1,40 @@
+
+## Register and Login sistem
+
+    - Autentication with JWT token;
+    - Express
+    - Mysql
+
+    - create refresh token and save refresh token into httpOnly cookie so that our application will be safe from XSS (Cross-site Scripting) and CSRF (Cross-site Request Forgery) attacks.
+
+## application structure
+
+    - MVC
+
+    ## Models
+
+        - create a database
+        - connect with database
+        - create user model
+
+    ## Controllers
+
+        - getUsers - query no db e retorna todos os users;
+
+        - Register -> 
+            recebe o user, pwd, confirmPwd;
+            checa se o pwd e confirmPwd são iguais, caso não retorna status 400 e uma msg de erro;
+            transforma o pwd em um hashPwd;
+            escreve no db o user com o seu hashPwd;
+            envia uma msg de sucesso;
+            
+        - Login ->
+            - Pega o usuário e senha que vem do fron end;
+            - Faz uma query no db e encontra o usuário;
+            - Verifica se a senha é a senha armazenada no db (hashPwd);
+            - Cria um token de acesso a partir do id e user do usuário armazenado no db;
+            - Cria um refresh token a partir do id e user do usuário armazenado no db;
+            - Atualiza o refresh token do usuário no db;
+            - Responde a requisição com um cookie contendo o refresh token;
+            - Responde a requisição com o token de acesso;
+            - Se o usuário não existir, retorna msg de erro e status 404;
