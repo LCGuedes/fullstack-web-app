@@ -10,6 +10,8 @@ export class SignUpController implements Controller {
           statusCode: 400,
         };
     }
+    const { password, confirmPassword } = httpRequest.body;
+    if (password !== confirmPassword) return { statusCode: 400 };
     return { statusCode: 200 };
   }
 }
