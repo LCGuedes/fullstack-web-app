@@ -1,7 +1,12 @@
+import { AddAccount } from "../../domain/useCases/addAccount";
 import { Controller } from "../protocols/controller";
 import { HttpRequest, HttpResponse } from "../protocols/http";
 
 export class SignUpController implements Controller {
+  private readonly addAccount: AddAccount;
+  constructor(addAccount: AddAccount) {
+    this.addAccount = addAccount;
+  }
   handle(httpRequest: HttpRequest): HttpResponse {
     const requiredFields = ["username", "password", "confirmPassword"];
     for (const field of requiredFields) {
@@ -10,8 +15,9 @@ export class SignUpController implements Controller {
           statusCode: 400,
         };
     }
-    const { password, confirmPassword } = httpRequest.body;
+    const { username, password, confirmPassword } = httpRequest.body;
     if (password !== confirmPassword) return { statusCode: 400 };
+    this.addAccount.add({ username, password });
     return { statusCode: 200 };
   }
 }
