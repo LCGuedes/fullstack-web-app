@@ -5,13 +5,13 @@ import { AccountModel } from "../../domain/models/account";
 
 const makeAddAccountStub = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    add(account: AddAccountModel): AccountModel {
+    async add(account: AddAccountModel): Promise<AccountModel> {
       const fakeAccount = {
         id: "valid_id",
         username: "valid_username",
         password: "valid_password",
       };
-      return fakeAccount;
+      return new Promise((resolve) => resolve(fakeAccount));
     }
   }
   return new AddAccountStub();
@@ -24,31 +24,34 @@ const makeSut = () => {
 };
 
 describe("SignUp", () => {
-  it("Should return status 400 if name is not provided", () => {
+  it("Should return status 400 if name is not provided", async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: { password: "any_pwd", confirmPassword: "any_confirmPwd" },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
   });
-  it("Should return status 400 if password is not provided", () => {
+
+  it("Should return status 400 if password is not provided", async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: { username: "any_username", confirmPassword: "any_confirmPwd" },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
   });
-  it("Should return status 400 if confirmPassword is not provided", () => {
+
+  it("Should return status 400 if confirmPassword is not provided", async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: { username: "any_username", password: "any_pwd" },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
   });
-  it("Should return status 400 if confirmPassword fails", () => {
+
+  it("Should return status 400 if confirmPassword fails", async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: {
@@ -57,10 +60,11 @@ describe("SignUp", () => {
         confirmPassword: "any_different_pwd",
       },
     };
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
   });
-  it("Should call AddAccount with correct values", () => {
+
+  it("Should call AddAccount with correct values", async () => {
     const { sut, addAccountStub } = makeSut();
     const spy = vi.spyOn(addAccountStub, "add");
 
@@ -72,16 +76,17 @@ describe("SignUp", () => {
       },
     };
 
-    sut.handle(httpRequest);
+    await sut.handle(httpRequest);
 
     expect(spy).toBeCalledWith({
       username: "any_username",
       password: "any_pwd",
     });
   });
-  it("Should return status 500 if AddAccount throws", () => {
+
+  it("Should return status 500 if AddAccount throws", async () => {
     const { sut, addAccountStub } = makeSut();
-    const spy = vi.spyOn(addAccountStub, "add").mockImplementationOnce(() => {
+    vi.spyOn(addAccountStub, "add").mockImplementationOnce(() => {
       throw new Error();
     });
 
@@ -93,11 +98,12 @@ describe("SignUp", () => {
       },
     };
 
-    const httpResponse = sut.handle(httpRequest);
+    const httpResponse = await sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(500);
   });
-  it("Should return status 200 if valid data is provided", () => {
+
+  it("Should return status 200 if valid data is provided", async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: {
@@ -107,9 +113,9 @@ describe("SignUp", () => {
       },
     };
 
-    const httpRespose = sut.handle(httpRequest);
-    expect(httpRespose.statusCode).toBe(200);
-    expect(httpRespose.body).toEqual({
+    const httpResponse = await sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(200);
+    expect(httpResponse.body).toEqual({
       id: "valid_id",
       username: "valid_username",
       password: "valid_password",

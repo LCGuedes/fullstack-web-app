@@ -7,7 +7,7 @@ export class SignUpController implements Controller {
   constructor(addAccount: AddAccount) {
     this.addAccount = addAccount;
   }
-  handle(httpRequest: HttpRequest): HttpResponse {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const requiredFields = ["username", "password", "confirmPassword"];
       for (const field of requiredFields) {
@@ -18,7 +18,7 @@ export class SignUpController implements Controller {
       }
       const { username, password, confirmPassword } = httpRequest.body;
       if (password !== confirmPassword) return { statusCode: 400 };
-      const account = this.addAccount.add({ username, password });
+      const account = await this.addAccount.add({ username, password });
       return { statusCode: 200, body: account };
     } catch (error) {
       return { statusCode: 500 };
