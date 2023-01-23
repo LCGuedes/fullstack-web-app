@@ -1,8 +1,15 @@
-export class SignUpController {
-  handle(httpRequest: any): any {
-    const { username, password, confirmPassword } = httpRequest;
-    if (!username) return { statusCode: 400 };
-    if (!password) return { statusCode: 400 };
-    if (!confirmPassword) return { statusCode: 400 };
+import { Controller } from "../protocols/controller";
+import { HttpRequest, HttpResponse } from "../protocols/http";
+
+export class SignUpController implements Controller {
+  handle(httpRequest: HttpRequest): HttpResponse {
+    const requiredFields = ["username", "password", "confirmPassword"];
+    for (const field of requiredFields) {
+      if (!httpRequest.body[field])
+        return {
+          statusCode: 400,
+        };
+    }
+    return { statusCode: 200 };
   }
 }
