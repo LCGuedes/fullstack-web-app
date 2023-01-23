@@ -97,4 +97,22 @@ describe("SignUp", () => {
 
     expect(httpResponse.statusCode).toBe(500);
   });
+  it("Should return status 200 if valid data is provided", () => {
+    const { sut } = makeSut();
+    const httpRequest = {
+      body: {
+        username: "valid_username",
+        password: "valid_pwd",
+        confirmPassword: "valid_pwd",
+      },
+    };
+
+    const httpRespose = sut.handle(httpRequest);
+    expect(httpRespose.statusCode).toBe(200);
+    expect(httpRespose.body).toEqual({
+      id: "valid_id",
+      username: "valid_username",
+      password: "valid_password",
+    });
+  });
 });
