@@ -18,10 +18,10 @@ export class SignUpController implements Controller {
       }
       const { username, password, confirmPassword } = httpRequest.body;
       if (password !== confirmPassword) return { statusCode: 400 };
-      this.addAccount.add({ username, password });
+      const account = this.addAccount.add({ username, password });
+      return { statusCode: 200, body: account };
     } catch (error) {
       return { statusCode: 500 };
     }
-    return { statusCode: 200 };
   }
 }
