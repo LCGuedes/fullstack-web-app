@@ -11,4 +11,13 @@ describe("SignUp", () => {
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
   });
+  it("Should return status 400 if password is not provided", () => {
+    const sut = new SignUpController();
+    const httpRequest = {
+      username: "any_username",
+      confirmPassword: "any_confirmPwd",
+    };
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(400);
+  });
 });
