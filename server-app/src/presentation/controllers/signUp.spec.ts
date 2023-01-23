@@ -79,4 +79,22 @@ describe("SignUp", () => {
       password: "any_pwd",
     });
   });
+  it("Should return status 500 if AddAccount throws", () => {
+    const { sut, addAccountStub } = makeSut();
+    const spy = vi.spyOn(addAccountStub, "add").mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const httpRequest = {
+      body: {
+        username: "any_username",
+        password: "any_pwd",
+        confirmPassword: "any_pwd",
+      },
+    };
+
+    const httpResponse = sut.handle(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(500);
+  });
 });
