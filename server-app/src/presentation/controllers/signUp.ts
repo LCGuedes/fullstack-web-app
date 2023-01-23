@@ -8,16 +8,20 @@ export class SignUpController implements Controller {
     this.addAccount = addAccount;
   }
   handle(httpRequest: HttpRequest): HttpResponse {
-    const requiredFields = ["username", "password", "confirmPassword"];
-    for (const field of requiredFields) {
-      if (!httpRequest.body[field])
-        return {
-          statusCode: 400,
-        };
+    try {
+      const requiredFields = ["username", "password", "confirmPassword"];
+      for (const field of requiredFields) {
+        if (!httpRequest.body[field])
+          return {
+            statusCode: 400,
+          };
+      }
+      const { username, password, confirmPassword } = httpRequest.body;
+      if (password !== confirmPassword) return { statusCode: 400 };
+      this.addAccount.add({ username, password });
+    } catch (error) {
+      return { statusCode: 500 };
     }
-    const { username, password, confirmPassword } = httpRequest.body;
-    if (password !== confirmPassword) return { statusCode: 400 };
-    this.addAccount.add({ username, password });
     return { statusCode: 200 };
   }
 }
