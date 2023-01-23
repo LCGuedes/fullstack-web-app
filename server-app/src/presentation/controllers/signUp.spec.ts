@@ -5,8 +5,7 @@ describe("SignUp", () => {
   it("Should return status 400 if name is not provided", () => {
     const sut = new SignUpController();
     const httpRequest = {
-      password: "any_pwd",
-      confirmPassword: "any_confirmPwd",
+      body: { password: "any_pwd", confirmPassword: "any_confirmPwd" },
     };
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
@@ -14,8 +13,7 @@ describe("SignUp", () => {
   it("Should return status 400 if password is not provided", () => {
     const sut = new SignUpController();
     const httpRequest = {
-      username: "any_username",
-      confirmPassword: "any_confirmPwd",
+      body: { username: "any_username", confirmPassword: "any_confirmPwd" },
     };
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
@@ -23,8 +21,7 @@ describe("SignUp", () => {
   it("Should return status 400 if confirmPassword is not provided", () => {
     const sut = new SignUpController();
     const httpRequest = {
-      username: "any_username",
-      password: "any_pwd",
+      body: { username: "any_username", password: "any_pwd" },
     };
     const httpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
