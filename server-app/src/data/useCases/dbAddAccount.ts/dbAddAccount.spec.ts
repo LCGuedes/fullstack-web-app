@@ -33,4 +33,17 @@ describe("DbAddAccount", () => {
     await sut.add(accountData);
     expect(encryptSpy).toHaveBeenCalledWith("valid_password");
   });
+
+  it("Should throws if Encrypter throws", async () => {
+    const { sut, encrypterStub } = makeSut();
+    vi.spyOn(encrypterStub, "encrypt").mockReturnValueOnce(
+      new Promise((resolve, reject) => reject(new Error()))
+    );
+    const accountData = {
+      username: "valid_username",
+      password: "valid_password",
+    };
+    const promise = sut.add(accountData);
+    await expect(promise).rejects.toThrow();
+  });
 });
